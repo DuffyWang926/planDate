@@ -1,9 +1,15 @@
 const http = require('http');
 const lodash = require('lodash');
-
-var fn_city = async (ctx, next) => {
+const urlib = require("url");
+const getZiRoomApi = require('../crawlingData/getApiData/getZiRoomApi.js')
+var fn_roomList = async (ctx, next) => {
+    console.log(ctx,next,'ctx','next')
+    let urlParams = urlib.parse(ctx.request.url,true)
+    const { key } = urlParams.query
+    let result = []
+    result = await getZiRoomApi.getZiRoomApi(key)
     ctx.response.body = {
-        data:['北京']
+        data:result
     }
 };
 var fn_city_region = async (ctx, next) => {
@@ -70,6 +76,6 @@ var fn_city_region = async (ctx, next) => {
 
 };
 module.exports = {
-    'GET /city': fn_city,
+    'GET /roomList': fn_roomList,
     'GET /region/:city': fn_city_region,
 };

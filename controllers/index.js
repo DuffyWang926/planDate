@@ -30,11 +30,7 @@ var fn_signin = async (ctx, next) => {
 let fn_logIn = async (ctx, next) => {
     let name = ctx.request.body.userName || '',
         password = ctx.request.body.userPassword || '';
-
     let User = model.User;
-
-   
-
     let user = await User.findAll({
         where: {
             name
@@ -52,6 +48,24 @@ let fn_logIn = async (ctx, next) => {
             msg:'用户不存在'
         }
     }
+}
+
+let test = async (ctx, next) => {
+    const { data } = ctx.request.body
+    console.log(data,'data')
+    let buf = Buffer.from(data,'binary')
+    
+    let bufBasse = buf.toString('base64')
+    fs.writeFile("./hello.jpeg",buf,function(err){
+        if(!err){
+            console.log("文件写入成功");
+        }
+    } );
+    ctx.response.body= {
+        data:bufBasse
+    }
+
+    
 }
 
 let city_init = async (ctx, next) => {
@@ -141,7 +155,7 @@ let city_init = async (ctx, next) => {
         });
 
     }
-    let city = 
+    let city = ''
     
     
     
@@ -162,4 +176,5 @@ module.exports = {
     'GET /cityInit': city_init,
     'POST /signin': fn_signin,
     'POST /logIn': fn_logIn,
+    'POST /test': test,
 };
