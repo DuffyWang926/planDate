@@ -2,7 +2,7 @@ const https = require('https');
 const axios = require("axios");
 const cheerio = require('cheerio');
 const { getZiRoomApiData } = require('./getZiRoomApiData') 
-const getEggShellApiData = require('./getEggShellApiData') 
+const { getEggShellApiData } = require('./getEggShellApiData') 
 
 let getZiRoomApi = async (key) =>{
     let result = []

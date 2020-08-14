@@ -86,4 +86,4 @@ let getDataFromHtml = (data) =>{
     return result
 }
 
-module.exports =  getEggShellApiData 
+module.exports =  { getEggShellApiData, getDataFromHtml} 

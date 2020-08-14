@@ -9,7 +9,6 @@ const cors = require('koa2-cors')
 
 let
     User = model.User;
-
     // (async () => {
     //     var user = await User.create({
     //         userId:'0',

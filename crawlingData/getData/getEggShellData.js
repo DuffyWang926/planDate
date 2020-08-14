@@ -1,39 +1,38 @@
 const puppeteer = require('puppeteer')
 const chalk = require('chalk')
-const { getDataFromHtml } = require('../getApiData/getZiRoomApiData') 
+const { getDataFromHtml } = require('../getApiData/getEggShellApiData') 
 const log = console.log
-let getZiRoomData = async (key) =>{
+let getEggShellData = async (key) =>{
     let result = {}
     const browser = await puppeteer.launch()
-    let url = 'http://www.ziroom.com/z/?qwd=' + key
-    let resultFirst = []
-    let resultOther = []
+    let url = 'https://www.danke.com/room/bj?search_text=' + key
+    let resultFirstEgg = []
+    let resultOtherEgg = []
     try {
       const page = await browser.newPage()
       await page.goto(url)
-      log(chalk.yellow('ziRoom页面初次加载完毕'))
+      log(chalk.yellow('eggShell页面初次加载完毕'))
       const html = await page.content();
-      resultFirst = getDataFromHtml(html)
-      let sumPage = await page.$('.Z_pages')
-      let sumList = await page.$('.Z_pages > a')
-      let sumLen = sumList && sumList.length 
+      resultFirstEgg = getDataFromHtml(html)
+      let sumPage = await page.$('.page')
+      let sumList = await page.$$('.page > a')
+      let sumLen = sumList && sumList.length
       let sumText = ''
       let len = 0
       if( sumLen > 5){
         sumText = await sumPage.$eval('a:nth-of-type(4)', el => el.textContent)
-        len = +sumText - 1
+        len = +sumText -1
       }else{
         len = sumLen - 2
       }
-      
-      for(let i = 0;i < (len -2); i++){
-        let nextNode = await page.$x('//a[text()="下一页"]')
-        nextNode[0].click()
+      for(let i = 0;i < len; i++){
+        let nextNode = await page.$('.page > a:nth-last-child(1)')
+        nextNode.click()
         await page.waitFor(1000)
         // await page.waitForSelector('.Z_list > .Z_list-box > .item')
         const html = await page.content();
         let temp = getDataFromHtml(html)
-        resultOther = resultOther.concat(temp)
+        resultOtherEgg = resultOtherEgg.concat(temp)
       }
 
   
@@ -49,8 +48,8 @@ let getZiRoomData = async (key) =>{
       // process.exit(0)
     }
     result ={
-      resultFirst,
-      resultOther
+      resultFirstEgg,
+      resultOtherEgg
     }
 
     return result
@@ -83,4 +82,4 @@ async function handleData(page) {
   log(chalk.yellow('写入数据库完毕'))
 }
 
-module.exports = getZiRoomData
+module.exports = getEggShellData
