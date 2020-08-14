@@ -107,4 +107,7 @@ let getDataFromHtml = (data) =>{
     return result
 }
 
-module.exports =  getZiRoomApiData 
+module.exports =  { 
+    getZiRoomApiData,
+    getDataFromHtml
+} 

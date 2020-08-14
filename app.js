@@ -47,8 +47,6 @@ app.use(templating('views', {
 
 app.use(controller());
 
-
-
 app.listen(8888);
 
 console.log('app started at port 8888...');
