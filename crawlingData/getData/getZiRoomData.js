@@ -5,11 +5,16 @@ const log = console.log
 let getZiRoomData = async (key) =>{
     let result = {}
     const browser = await puppeteer.launch()
+
+    
     let url = 'http://www.ziroom.com/z/?qwd=' + key
     let resultFirst = []
     let resultOther = []
     try {
       const page = await browser.newPage()
+      await page.evaluateOnNewDocument( () => {
+        Object.defineProperty(navigator, "webdriver", {get: () => undefined})
+     })
       await page.goto(url)
       log(chalk.yellow('ziRoom页面初次加载完毕'))
       const html = await page.content();
