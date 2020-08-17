@@ -2,19 +2,43 @@ const puppeteer = require('puppeteer')
 const chalk = require('chalk')
 const { getDataFromHtml } = require('../getApiData/getZiRoomApiData') 
 const log = console.log
+const devices = require('puppeteer/DeviceDescriptors');
+const device = devices["iPhone 6"]
+const path = require('path');
+const pathToExtension = path.join(__dirname, './chrome-mac/Chromium.app/Contents/MacOS/Chromium');
 let getZiRoomData = async (key) =>{
     let result = {}
-    const browser = await puppeteer.launch()
+    const viewport =  {
+        width: 1300,
+        height: 900
+    }
+    const conf = {
+      headless: true,
+      // executablePath: pathToExtension,
+      // defaultViewport: {
+      //     width: 1300,
+      //     height: 900
+      // },
+      // ignoreDefaultArgs:["--enable-automation"],
+      ua:"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
+      // device,
+      viewport
+    }
 
-    
+    const browser = await puppeteer.launch(conf)
     let url = 'http://www.ziroom.com/z/?qwd=' + key
     let resultFirst = []
     let resultOther = []
     try {
       const page = await browser.newPage()
+      await page.setViewport(conf.viewport);
+      await page.setUserAgent(conf.ua);
+      // await page.emulate(conf.device);
+      
+
       await page.evaluateOnNewDocument( () => {
-        Object.defineProperty(navigator, "webdriver", {get: () => undefined})
-     })
+          Object.defineProperty(navigator, "webdriver", {get: () => false})
+      })
       await page.goto(url)
       log(chalk.yellow('ziRoom页面初次加载完毕'))
       const html = await page.content();
