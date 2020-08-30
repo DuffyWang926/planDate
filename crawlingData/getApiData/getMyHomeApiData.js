@@ -2,15 +2,26 @@ const https = require('https');
 const axios = require("axios");
 const cheerio = require('cheerio');
 const { slice } = require('lodash');
- 
+const urlencode = require('urlencode');
 
-let getEggShellApiData = async (key) =>{
+let getMyHomeApiData = async (key) =>{
     let result = []
-    let url = 'https://www.danke.com/room/bj'
+    let urlInit = key + '?zn=' + key
+    let urlEnd = urlencode(urlInit)
+    
+    let url = 'https://bj.5i5j.com/zufang/w3/' + '_' +   urlEnd
     let headersText = `
-    Referer: https://www.danke.com/
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+    Accept-Encoding: gzip, deflate, br
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8
+    Connection: keep-alive
+    Cookie: _ga=GA1.2.375043681.1594694578; yfx_c_g_u_id_10000001=_ck20071410425814585459513721331; _dx_uzZo5y=931f60c3a4ae43f35b8a96436299fd5aa97f4521c2ebd437b2d9c6946c78ff888246bdd6; yfx_f_l_v_t_10000001=f_t_1594694578442__r_t_1595574906075__v_t_1595574906075__r_c_1; __TD_deviceId=51GP8AL7906QJ7UO; gr_user_id=8cdc0a86-92cb-4297-99f5-160e7cb31bc5; smidV2=202007241515106ced53c9547b879d4a6419c58052ad1b00b71af5ddc10ef80; Hm_lvt_94ed3d23572054a86ed341d64b267ec6=1595574911; grwng_uid=b22154c7-3c0c-4bed-b7c3-1a92715cda79; _Jo0OQK=5BC366133F302C323B01D650DCBC786A2F6CF0810EA0B2E0BF0B4CC51CAC7D06198C8861DC1516B3A36D813A257C9F1FE22D6A83B8ACB1FD7AFA83F084B509E4746DE8682CA7D10E3B498FB9E3C853EFEE298FB9E3C853EFEE215D8BEE34E43E5C0GJ1Z1fQ==
+    Host: bj.5i5j.com
+    Sec-Fetch-Dest: document
+    Sec-Fetch-Mode: navigate
+    Sec-Fetch-Site: none
     Upgrade-Insecure-Requests: 1
-    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36
+    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36
     `
     let headersList = headersText.trim().split('\n')
     let headers = {}
@@ -26,10 +37,11 @@ let getEggShellApiData = async (key) =>{
     }
     let response = await axios({
         method: "GET",
+        headers,
         // headers: { "Content-Type": "application/x-www-form-urlencoded" },
         url: url,
         // data: Qs.stringify(param)
-        params
+        // params
      })
     const { data } = response
     result = getDataFromHtml(data)
@@ -101,4 +113,4 @@ let getDataFromHtml = (data) =>{
     return result
 }
 
-module.exports =  { getEggShellApiData, getDataFromHtml} 
+module.exports =  { getMyHomeApiData, getDataFromHtml} 

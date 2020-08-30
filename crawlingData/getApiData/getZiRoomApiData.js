@@ -1,9 +1,11 @@
 const https = require('https');
 const axios = require("axios");
 const cheerio = require('cheerio');
- 
+const chalk = require('chalk')
+const log = console.log
 
 let getZiRoomApiData = async (key) =>{
+    log(chalk.yellow('getZiRoomApiData begin'))
     let result = []
     let url = 'http://www.ziroom.com/z/'
     let headersText = `
@@ -41,6 +43,7 @@ let getZiRoomApiData = async (key) =>{
      })
     const { data } = response
     result = getDataFromHtml(data)
+    log(chalk.yellow('getZiRoomApiData end'))
     return result
 
 }

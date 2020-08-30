@@ -1,19 +1,32 @@
 const puppeteer = require('puppeteer')
 const chalk = require('chalk')
-const { getDataFromHtml } = require('../getApiData/getMyHomeApiData') 
+const { getMushRoomApiData } = require('../getApiData/getMushRoomApiData') 
+
 const log = console.log
-let getMyHomeData = async (key) =>{
+let getMushRoomData = async (key) =>{
     let result = []
-    const browser = await puppeteer.launch()
-    let url = 'https://bj.5i5j.com/zufang/w3/_' +  key + '?zn=' + key
-    let resultFirstEgg = []
-    let resultOtherEgg = []
+    const conf = {
+      headless: false,
+      // executablePath: pathToExtension,
+      // defaultViewport: {
+      //     width: 1300,
+      //     height: 900
+      // },
+      // ignoreDefaultArgs:["--enable-automation"],
+      ua:"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
+      // device,
+      // viewport
+    }
+    const browser = await puppeteer.launch(conf)
+    let url = 'http://bj.mgzf.com/list/?searchWord' +  key
+    let resultFirstMush = []
+    let resultOtherMush = []
     try {
       const page = await browser.newPage()
       await page.goto(url)
-      log(chalk.yellow('eggShell页面初次加载完毕'))
+      log(chalk.yellow('mushRoom 页面初次加载完毕'))
       const html = await page.content();
-      resultFirstEgg = getDataFromHtml(html)
+      resultFirstMush = getDataFromHtml(html)
 
       let sumList = await page.$$('.pageBox > .pageSty > a')
       let sumLen = sumList && sumList.length
@@ -25,7 +38,7 @@ let getMyHomeData = async (key) =>{
           nextNode = await page.$('.cPage')
           const html = await page.content();
           let temp = getDataFromHtml(html)
-          resultOtherEgg = resultOtherEgg.concat(temp)
+          resultOtherMush = resultOtherMush.concat(temp)
         }
 
       }
@@ -48,7 +61,7 @@ let getMyHomeData = async (key) =>{
         
     //   }
       
-    
+    log(chalk.green('服务正常结束'))
     
 
   
@@ -60,12 +73,12 @@ let getMyHomeData = async (key) =>{
     } finally {
       // 最后要退出进程
       await browser.close()
-      log(chalk.green('服务正常结束'))
+      
       // process.exit(0)
     }
     result ={
-      resultFirstEgg,
-      resultOtherEgg
+      resultFirstMush,
+      resultOtherMush
     }
     
 
@@ -100,4 +113,4 @@ async function handleData(page) {
 }
 
 
-module.exports = getMyHomeData
+module.exports = getMushRoomData

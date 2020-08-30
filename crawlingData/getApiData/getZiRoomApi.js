@@ -1,15 +1,17 @@
-const https = require('https');
-const axios = require("axios");
-const cheerio = require('cheerio');
-const { getZiRoomApiData } = require('./getZiRoomApiData') 
-const { getEggShellApiData } = require('./getEggShellApiData') 
+const { getMyHomeApiData } = require('./getMyHomeApiData') 
+const { getMushRoomApiData } = require('./getMushRoomApiData') 
 
 let getZiRoomApi = async (key) =>{
-    let result = []
-    let ziRoomData = await getZiRoomApiData(key)
-    let eggShellData = await getEggShellApiData(key)
-    let resultend = result.concat(ziRoomData)
-    resultend = resultend.concat(eggShellData)
+    // let ziRoomData = await getZiRoomApiData(key)
+    // let eggShellData = await getEggShellApiData(key)
+    // let myHomeData = await getMyHomeApiData(key)
+    let mushRoomData = await getMushRoomApiData(key)
+    
+    let resultend = []
+    // resultend = result.concat(ziRoomData)
+    // resultend = resultend.concat(eggShellData)
+    // resultend = resultend.concat(myHomeData)
+    resultend = resultend.concat(mushRoomData)
     return resultend
 }
 
