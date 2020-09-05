@@ -57,7 +57,7 @@ let getDataFromHtml = (data) =>{
         let item = cheerio.load(e)
         let detail = item('div.listImg > a') 
         let detailUrl = detail.attr('href')
-        if(!detailUrl.includes('http')){
+        if(detailUrl && !detailUrl.includes('http')){
             if(detailUrl.includes('//')){
                 detailUrl.replace('//','http://')
             }else{
@@ -70,7 +70,7 @@ let getDataFromHtml = (data) =>{
         if (!imgSrc){
             imgSrc = img.attr('data-src')
         }
-        if (!imgSrc.includes('http')){
+        if (imgSrc && !imgSrc.includes('http')){
             imgSrc.replace('//','http://')
         }
         let titleNode = item('div.listCon > h3>a')

@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer')
 const chalk = require('chalk')
-const { getMushRoomApiData } = require('../getApiData/getMushRoomApiData') 
+const { getDataFromHtml } = require('../getApiData/getMushRoomApiData') 
 
 const log = console.log
 let getMushRoomData = async (key) =>{
