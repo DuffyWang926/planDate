@@ -13,7 +13,7 @@ let getZiRoomData = async (key) =>{
         height: 900
     }
     const conf = {
-      headless: true,
+      headless: false,
       // executablePath: pathToExtension,
       // defaultViewport: {
       //     width: 1300,
@@ -26,7 +26,7 @@ let getZiRoomData = async (key) =>{
     }
 
     const browser = await puppeteer.launch(conf)
-    let url = 'http://www.ziroom.com/z/?qwd=' + key
+    let url = 'https://passport.futuhk.com/login#login'
     let resultFirst = []
     let resultOther = []
     try {
@@ -43,37 +43,69 @@ let getZiRoomData = async (key) =>{
       log(chalk.yellow('ziRoom页面初次加载完毕'))
       const html = await page.content();
       resultFirst = getDataFromHtml(html)
-      let sumPage = await page.$('.Z_pages')
-      let sumList = await page.$('.Z_pages > a')
-      let sumLen = sumList && sumList.length 
-      let sumText = ''
-      let len = 0
-      if( sumLen > 5){
-        sumText = await sumPage.$eval('a:nth-of-type(4)', el => el.textContent)
-        len = +sumText - 1
-      }else{
-        len = sumLen - 2
-      }
+      let logInForm = await page.$$('.ui-input-wrapper')
+      let logInNode = logInForm[1]
+      await logInNode.$eval('input', node => node.value='17994525' )
+      let logInPWDNode = logInForm[2]
+      await logInPWDNode.$eval('input', node => node.value='Wef1991926' )
+      let logInClickNode = await page.$('.ui-form-submit')
+      logInClickNode.click()
+
+      await page.waitFor(1000)
+      await page.waitForSelector('.nav-item-user')
+      let logInCount = await page.$('.nav-item-user >a')
+      logInCount.click()
+
+      await page.waitFor(1000)
+      await page.waitForSelector('.sideNav')
+      let leftNav = page.waitForSelector('.sideNav')
+      let leftList = await page.$$('.sideNav .nav-item >a')
+      let stockNav = leftList[2]
+      stockNav.click()
+      // let stockList = await page.$('.sideNav .active .js-subNav >ul >li >a')
+      // stockList.click()
+      await page.waitFor(1000)
+
+      let newStock = await page.$x('//a[text()="新股认购"]')
+      // await page.$eval('link[rel=preload]', el => el.href);
+
+      newStock[0].click()
+
+
+
       
-      for(let i = 0;i < (len -2); i++){
-        let nextNode = await page.$x('//a[text()="下一页"]')
-        nextNode[0].click()
-        await page.waitFor(1000)
-        // await page.waitForSelector('.Z_list > .Z_list-box > .item')
-        const html = await page.content();
-        let temp = getDataFromHtml(html)
-        resultOther = resultOther.concat(temp)
-      }
+      
+
+      // let sumList = await page.$('.Z_pages > a')
+      // let sumLen = sumList && sumList.length 
+      // let sumText = ''
+      // let len = 0
+      // if( sumLen > 5){
+      //   sumText = await sumPage.$eval('a:nth-of-type(4)', el => el.textContent)
+      //   len = +sumText - 1
+      // }else{
+      //   len = sumLen - 2
+      // }
+      
+      // for(let i = 0;i < (len -2); i++){
+      //   let nextNode = await page.$x('//a[text()="下一页"]')
+      //   nextNode[0].click()
+      //   await page.waitFor(1000)
+      //   // await page.waitForSelector('.Z_list > .Z_list-box > .item')
+      //   const html = await page.content();
+      //   let temp = getDataFromHtml(html)
+      //   resultOther = resultOther.concat(temp)
+      // }
 
   
     } catch (error) {
       // 出现任何错误，打印错误消息并且关闭浏览器
       console.log(error)
       log(chalk.red('服务意外终止'))
-      await browser.close()
+      // await browser.close()
     } finally {
       // 最后要退出进程
-      await browser.close()
+      // await browser.close()
       log(chalk.green('服务正常结束'))
       // process.exit(0)
     }
